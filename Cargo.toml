@@ -7,3 +7,4 @@ resolver = "2"
 example_app = { path = "crates/app" }
 
 gpui = "0.2.2"
+serde = { version = "1.0", features = ["derive"] }
