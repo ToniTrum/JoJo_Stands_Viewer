@@ -1,11 +1,11 @@
 [package]
-name = "example_app"
+name = "app"
 version = "0.1.0"
 edition = "2021"
 publish = false
 
 [[bin]]
-name = "example_app"
+name = "app"
 path = "src/main.rs"
 
 [dependencies]
