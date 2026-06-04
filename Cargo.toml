@@ -1,0 +1,9 @@
+[workspace]
+members = ["crates/example_app"]
+default-members = ["crates/example_app"]
+resolver = "2"
+
+[workspace.dependencies]
+example_app = { path = "crates/example_app" }
+
+gpui = "0.2.2"
