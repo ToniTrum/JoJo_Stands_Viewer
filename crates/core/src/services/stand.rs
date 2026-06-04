@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::repositories::stand::StandRepository;
+use crate::repositories::StandRepository;
 use crate::entities::StandEntity;
 
 pub struct StandService {
