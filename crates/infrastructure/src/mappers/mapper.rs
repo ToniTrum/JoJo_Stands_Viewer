@@ -1,4 +1,4 @@
-pub trait Mapper<Entity, Dto> {
-    fn to_dto(entity: &Entity) -> Dto;
-    fn to_entity(dto: &Dto) -> Entity;
+pub trait Mapper<Model, Dto> {
+    fn to_dto(model: &Model) -> Dto;
+    fn to_model(dto: &Dto) -> Model;
 }

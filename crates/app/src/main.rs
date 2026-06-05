@@ -1,30 +1,28 @@
 use gpui::*;
 
-struct HelloWorld {
-    text: SharedString,
-}
-
-impl Render for HelloWorld {
-    fn render(&mut self, _window: &mut Window, _cx: &mut Context<Self>) -> impl IntoElement {
-        div()
-        .flex()
-        .bg(rgb(0x2e7d32))
-        .size_full()
-        .justify_center()
-        .items_center()
-        .text_xl()
-        .text_color(rgb(0xffffff))
-        .child(format!("Hello, {}!", &self.text))
-    }
-}
+use di::AppContainer;
+use ui::MainWindowEntity;
+use ui::MainWindow;
 
 fn main() {
-    Application::new().run(|cx: &mut App| {
-        cx.open_window(WindowOptions::default(), |_, cx| {
-            cx.new(|_cx| HelloWorld {
-                text: "World".into(),
-            })
-        })
-        .unwrap();
+    let base_dir = std::env::current_dir().unwrap();
+    println!("base dir: {}", base_dir.display());
+
+    let app_container = AppContainer::new(&base_dir).unwrap();
+    let stand_service = app_container.stand_service.clone();
+
+    Application::new().run(move |cx: &mut App| {
+        let window_entity = cx.new(|_cx| {
+            MainWindowEntity::new(stand_service)
+        });
+
+        cx.open_window(
+            gpui::WindowOptions::default(),
+            |_, cx| {
+                cx.new(|cx| {
+                    MainWindow::new(window_entity, cx)
+                })
+            },
+        ).unwrap();
     });
 }

@@ -12,7 +12,7 @@ pub struct AppContainer {
 
 impl AppContainer {
     pub fn new(base_dir: impl AsRef<Path>) -> Result<Self, Box<dyn std::error::Error>> {
-        let path_manager = PathManager::new(base_dir, "assets", "stands");
+        let path_manager = PathManager::new(base_dir, "assets", "jojo-stands");
 
         let csv_stand_repository = CsvStandRepository::new(&path_manager)?;
         let stand_repository: Arc<dyn StandRepository> = Arc::new(csv_stand_repository);

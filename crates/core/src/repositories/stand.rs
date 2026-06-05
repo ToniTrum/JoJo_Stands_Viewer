@@ -1,6 +1,6 @@
-use crate::entities::StandEntity;
+use crate::models::StandModel;
 
 pub trait StandRepository: Send + Sync {
-    fn get_all(&self) -> Vec<StandEntity>;
-    fn get_by_name(&self, name: &str) -> Option<StandEntity>;
+    fn get_all(&self) -> Vec<StandModel>;
+    fn get_by_name(&self, name: &str) -> Option<StandModel>;
 }

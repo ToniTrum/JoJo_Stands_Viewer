@@ -4,8 +4,8 @@ use super::RankDto;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StandDto {
-    #[serde(rename = "Name")]
-    name: String,
+    #[serde(rename = "Stand")]
+    stand: String,
     #[serde(rename = "PWR")]
     pwr: RankDto,
     #[serde(rename = "SPD")]
@@ -22,7 +22,7 @@ pub struct StandDto {
 
 impl StandDto {
     pub fn new(
-        name: String,
+        stand: String,
         pwr: RankDto,
         spd: RankDto,
         rng: RankDto,
@@ -31,7 +31,7 @@ impl StandDto {
         dev: RankDto
     ) -> Self {
         StandDto {
-            name,
+            stand,
             pwr,
             spd,
             rng,
@@ -41,8 +41,8 @@ impl StandDto {
         }
     }
 
-    pub fn name(&self) -> &str {
-        &self.name
+    pub fn stand(&self) -> &str {
+        &self.stand
     }
 
     pub fn power(&self) -> RankDto {

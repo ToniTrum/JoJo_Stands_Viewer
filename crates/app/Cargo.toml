@@ -9,4 +9,7 @@ name = "app"
 path = "src/main.rs"
 
 [dependencies]
+di = { path = "../di" }
+ui = { path = "../ui" }
+
 gpui.workspace = true

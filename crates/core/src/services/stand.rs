@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use crate::repositories::StandRepository;
-use crate::entities::StandEntity;
+use crate::models::StandModel;
 
 pub struct StandService {
     stand_repository: Arc<dyn StandRepository>,
@@ -14,11 +14,11 @@ impl StandService {
         }
     }
 
-    pub fn get_all(&self) -> Vec<StandEntity> {
+    pub fn get_all(&self) -> Vec<StandModel> {
         self.stand_repository.get_all()
     }
 
-    pub fn get_by_name(&self, name: &str) -> Option<StandEntity> {
+    pub fn get_by_name(&self, name: &str) -> Option<StandModel> {
         self.stand_repository.get_by_name(name)
     }
 }
