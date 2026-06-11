@@ -1,8 +1,9 @@
 use gpui::*;
+use gpui_component::Theme;
 
 use di::AppContainer;
-use ui::MainWindowEntity;
-use ui::MainWindow;
+use ui::MainScreenEntity;
+use ui::MainScreen;
 
 fn main() {
     let base_dir = std::env::current_dir().unwrap();
@@ -12,15 +13,17 @@ fn main() {
     let stand_service = app_container.stand_service.clone();
 
     Application::new().run(move |cx: &mut App| {
+        cx.set_global(Theme::default());
+
         let window_entity = cx.new(|_cx| {
-            MainWindowEntity::new(stand_service)
+            MainScreenEntity::new(stand_service)
         });
 
         cx.open_window(
             gpui::WindowOptions::default(),
             |_, cx| {
                 cx.new(|cx| {
-                    MainWindow::new(window_entity, cx)
+                    MainScreen::new(window_entity, cx)
                 })
             },
         ).unwrap();

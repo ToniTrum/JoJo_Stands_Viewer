@@ -1,3 +1,3 @@
-pub mod main_window;
+pub mod main_screen;
 
-pub use main_window::{MainWindowEntity, MainWindow};
+pub use main_screen::{MainScreenEntity, MainScreen};
