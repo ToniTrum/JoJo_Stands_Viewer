@@ -64,6 +64,7 @@ impl RenderOnce for Sidebar {
                                     style
                                         .w_full()
                                         .h(px(40.0))
+                                        .mb_2()
                                         .justify_start()
                                         .p_2()
                                         .bg(rgb(0x2d2d2d))

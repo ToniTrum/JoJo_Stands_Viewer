@@ -6,6 +6,13 @@ resolver = "2"
 [workspace.dependencies]
 example_app = { path = "crates/app" }
 
+core = { path = "crates/core" }
+di = { path = "crates/di" }
+infrastructure = { path = "crates/infrastructure" }
+ui = { path = "crates/ui" }
+utils = { path = "crates/utils" }
+
 gpui = "0.2.2"
 gpui-component = "0.5.1"
 serde = { version = "1.0", features = ["derive"] }
+csv = "1.3.1"
