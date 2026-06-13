@@ -11,7 +11,7 @@ impl PathManager {
         let assets_dir = base_dir.join(assets_dir_name);
 
         let csv_filename = format!("{}.csv", csv_name);
-        let csv_path = assets_dir.join("datasets").join(csv_filename);
+        let csv_path = assets_dir.join("data").join(csv_filename);
 
         PathManager {
             assets_dir,
