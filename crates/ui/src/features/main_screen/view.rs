@@ -2,6 +2,7 @@ use gpui::*;
 
 use super::MainScreenEntity;
 use super::components::Sidebar;
+use super::components::StandInfo;
 
 pub struct MainScreen {
     entity: Entity<MainScreenEntity>,
@@ -23,6 +24,7 @@ impl Render for MainScreen {
         let entity_state = self.entity.read(cx);
         let stands = entity_state.stands();
         let entity_clone = self.entity.clone();
+        let selected_stand = entity_state.selected_stand();
 
         div()
             .size_full()
@@ -36,28 +38,7 @@ impl Render for MainScreen {
                 });
             }))
             .child(
-                div()
-                    .flex_1()
-                    .h_full()
-                    .flex()
-                    .flex_col()
-                    .justify_center()
-                    .child(
-                        div()
-                            .flex()
-                            .flex_col()
-                            .items_center()
-                            .child(
-                                div()
-                                    .text_size(px(24.0))
-                                    .child("JoJo Stands List")
-                            )
-                            .child(
-                                div()
-                                    .text_size(px(24.0))
-                                    .child("Select a stand from the sidebar")
-                            )
-                    )
+                StandInfo::new(selected_stand)
             )
     }
 }

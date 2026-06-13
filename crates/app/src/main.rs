@@ -7,7 +7,6 @@ use ui::MainScreen;
 
 fn main() {
     let base_dir = std::env::current_dir().unwrap();
-    println!("base dir: {}", base_dir.display());
 
     let app_container = AppContainer::new(&base_dir).unwrap();
     let stand_service = app_container.stand_service.clone();

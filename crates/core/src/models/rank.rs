@@ -10,7 +10,7 @@ pub enum RankModel {
 }
 
 impl RankModel {
-    pub fn value(&self) -> u8 {
+    pub fn to_u8(&self) -> u8 {
         match self {
             RankModel::None => 0,
             RankModel::E => 1,
