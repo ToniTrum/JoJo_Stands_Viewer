@@ -1,6 +1,6 @@
 use gpui::*;
 
-use core::models::StandModel;
+use core::models::{StandModel, RankModel};
 use super::components::RadarChart;
 
 #[derive(IntoElement)]
@@ -48,6 +48,13 @@ impl RenderOnce for StandInfo {
                     7,
                     6,
                     vec![
+                        RankModel::E.to_string(),
+                        RankModel::D.to_string(),
+                        RankModel::C.to_string(),
+                        RankModel::B.to_string(),
+                        RankModel::A.to_string(),
+                    ],
+                    vec![
                         stand.power().to_u8() as u32,
                         stand.speed().to_u8() as u32,
                         stand.range().to_u8() as u32,
@@ -63,9 +70,9 @@ impl RenderOnce for StandInfo {
                         String::from("Precision"), 
                         String::from("Development Potential")
                     ],
-                    0x3c3c3c,
+                    0x9d9d9d,
                     0xff830f,
-                    50
+                    120
                 )
             )
     }

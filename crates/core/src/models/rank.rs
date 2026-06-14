@@ -21,5 +21,17 @@ impl RankModel {
             RankModel::Infinite => 6
         }
     }
+
+    pub fn to_string(&self) -> String {
+        match self {
+            RankModel::None => String::from("None"),
+            RankModel::E => String::from("E"),
+            RankModel::D => String::from("D"),
+            RankModel::C => String::from("C"),
+            RankModel::B => String::from("B"),
+            RankModel::A => String::from("A"),
+            RankModel::Infinite => String::from("Infinite")
+        }
+    }
 }
 

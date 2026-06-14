@@ -5,6 +5,7 @@ use std::f32::consts::{FRAC_PI_2, PI};
 pub struct RadarChart {
     grid_levels: usize,
     num_axes: usize,
+    grid_values: Vec<String>,
     stats: Vec<u32>,
     stat_labels: Vec<String>,
     grid_color: u32,
@@ -15,7 +16,8 @@ pub struct RadarChart {
 impl RadarChart {
     pub fn new(
         grid_levels: usize, 
-        num_axes: usize, 
+        num_axes: usize,
+        grid_values: Vec<String>,
         stats: Vec<u32>, 
         stat_labels: Vec<String>,
         grid_color: u32,
@@ -25,6 +27,7 @@ impl RadarChart {
         Self {
             grid_levels,
             num_axes,
+            grid_values,
             stats,
             stat_labels,
             grid_color,
@@ -47,7 +50,6 @@ impl RadarChart {
     ) {
         for level in 1..self.grid_levels {
             let level_radius = max_radius * (level as f32 / (self.grid_levels - 1) as f32);
-
             let start_angle = -FRAC_PI_2;
             let start_x = center_x + level_radius * start_angle.cos();
             let start_y = center_y + level_radius * start_angle.sin();
@@ -155,7 +157,6 @@ impl RadarChart {
             if i >= self.num_axes { break; }
 
             let angle = (i as f32 * angle_step) - FRAC_PI_2;
-            
             let text_radius = max_radius + 15.0;
             let x = center_x + text_radius * angle.cos();
             let y = center_y + text_radius * angle.sin();
@@ -185,8 +186,7 @@ impl RadarChart {
             } else if cos_a < 0.0 {
                 draw_x -= text_width;
             }
-
-            draw_y += text_height / 4.0; 
+            draw_y += text_height / 4.0;
 
             let origin = point(px(draw_x), px(draw_y));
             for run in &text_layout.runs {
@@ -205,6 +205,72 @@ impl RadarChart {
         }
     }
 
+    fn build_values_points(
+        &self, 
+        window: &mut Window,
+        max_radius: f32,
+        center_x: f32,
+        center_y: f32,
+    ) {
+        for i in 1..self.grid_values.len() {
+            let radius = max_radius * (i as f32 / (self.grid_levels - 1) as f32);
+            let start_angle = -FRAC_PI_2;
+            let start_x = center_x - 5.0;
+            let start_y = center_y + radius * start_angle.sin();
+
+            let mut builder = PathBuilder::stroke(px(2.0));
+            builder.move_to(point(px(start_x), px(start_y)));
+            builder.line_to(point(px(start_x + 10.0), px(start_y)));
+            builder.close();
+
+            if let Ok(path) = builder.build() {
+                window.paint_path(path, rgb(self.grid_color));
+            }
+        }
+    }
+
+    fn build_values_labels(
+        &self, 
+        window: &mut Window,
+        max_radius: f32,
+        center_x: f32,
+        center_y: f32,
+    ) {
+        for (i, value) in self.grid_values.iter().enumerate() {
+            let text_style = TextStyle {
+                font_size: px(12.0).into(),
+                color: hsla(0.0, 1.0, 0.99, 1.0),
+                ..Default::default()
+            };
+            let text_layout = window.text_system().layout_line(
+                value.as_str(),
+                text_style.font_size.to_pixels(px(1.0)),
+                &[],
+                None
+            );
+
+            let text_height: f32 = text_style.font_size.to_pixels(window.rem_size()).into();
+            let radius = max_radius * ((i + 1) as f32 / (self.grid_levels - 1) as f32);
+            let start_angle = -FRAC_PI_2;
+            let start_x = center_x + 7.0;
+            let start_y = center_y + radius * start_angle.sin() + text_height / 2.0;
+
+            let origin = point(px(start_x), px(start_y));
+            for run in &text_layout.runs {
+                for glyph in &run.glyphs {
+                    let glyph_origin = origin + glyph.position;
+
+                    let _ = window.paint_glyph(
+                        glyph_origin, 
+                        run.font_id, 
+                        glyph.id,
+                        text_style.font_size.to_pixels(window.rem_size()), 
+                        text_style.color
+                    );
+                }
+            }
+        }
+    }
 }
 
 impl RenderOnce for RadarChart {
@@ -224,7 +290,9 @@ impl RenderOnce for RadarChart {
 
                         self.build_grid(window, max_radius, center_x, center_y, angle_step);
                         self.build_axes(window, max_radius, center_x, center_y, angle_step);
+                        self.build_values_points(window, max_radius, center_x, center_y);
                         self.build_polygon(window, max_radius, center_x, center_y, angle_step);
+                        self.build_values_labels(window, max_radius, center_x, center_y);
                         self.build_labels(window, max_radius, center_x, center_y, angle_step);
                     }
                 )
