@@ -1,6 +1,6 @@
 use std::sync::Arc;
 use gpui::*;
-use gpui_component::{scroll::ScrollableElement, v_flex};
+use gpui_component::v_flex;
 
 use core::models::StandModel;
 use crate::components::{Button, ButtonContentType};
@@ -22,7 +22,7 @@ impl Sidebar {
         }
     }
 
-    pub fn stands(&self) -> &Vec<StandModel> {
+    pub fn _stands(&self) -> &Vec<StandModel> {
         &self.stands
     }
 }
@@ -49,7 +49,7 @@ impl RenderOnce for Sidebar {
                     .child(
                         v_flex()
                             .id("stand_list")
-                            .overflow_y_scrollbar()
+                            .overflow_y_scroll()
                             .gap_2()
                             .children(stands.into_iter().enumerate().map(|(i, stand)| {
                                 let stand_name = stand.name().to_string();

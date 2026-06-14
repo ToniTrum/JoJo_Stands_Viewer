@@ -19,11 +19,20 @@ impl PathManager {
         }
     }
 
-    pub fn assets_dir(&self) -> &PathBuf {
+    pub fn assets_dir(&self) -> &Path {
         &self.assets_dir
     }
 
-    pub fn csv_path(&self) -> &PathBuf {
+    pub fn csv_path(&self) -> &Path {
         &self.csv_path
+    }
+
+    pub fn image_path(&self, path: &str) -> PathBuf {
+        let image_path =  self.assets_dir.join("images").join(path);
+        if image_path.exists() {
+            image_path
+        } else {
+            self.assets_dir.join("images").join("unknown.png")
+        }
     }
 }

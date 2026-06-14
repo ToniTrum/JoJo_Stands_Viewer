@@ -77,7 +77,7 @@ checksum = "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
 
 [[package]]
 name = "app"
-version = "0.2.3"
+version = "1.0.0"
 dependencies = [
  "di",
  "gpui",
@@ -1008,7 +1008,7 @@ checksum = "6245d59a3e82a7fc217c5828a6692dbc6dfb63a0c8c90495621f7b9d79704a0e"
 
 [[package]]
 name = "core"
-version = "0.2.3"
+version = "1.0.0"
 dependencies = [
  "serde",
 ]
@@ -1304,9 +1304,10 @@ dependencies = [
 
 [[package]]
 name = "di"
-version = "0.2.3"
+version = "1.0.0"
 dependencies = [
  "core",
+ "gpui",
  "infrastructure",
 ]
 
@@ -2882,7 +2883,7 @@ dependencies = [
 
 [[package]]
 name = "infrastructure"
-version = "0.2.3"
+version = "1.0.0"
 dependencies = [
  "core",
  "csv",
@@ -6110,7 +6111,7 @@ dependencies = [
 
 [[package]]
 name = "ui"
-version = "0.2.3"
+version = "1.0.0"
 dependencies = [
  "core",
  "di",

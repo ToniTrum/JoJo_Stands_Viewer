@@ -60,3 +60,17 @@ impl StandModel {
         self.development_potential
     }
 }
+
+impl Default for StandModel {
+    fn default() -> Self {
+        StandModel {
+            name: String::from("No selected"),
+            power: RankModel::None,
+            speed: RankModel::None,
+            range: RankModel::None,
+            power_persistence: RankModel::None,
+            precision: RankModel::None,
+            development_potential: RankModel::None
+        }
+    }
+}

@@ -1,8 +1,10 @@
 [package]
 name = "di"
-version = "0.2.3"
+version = "1.0.0"
 edition = "2024"
 
 [dependencies]
 core.workspace = true
 infrastructure.workspace = true
+
+gpui.workspace = true
