@@ -45,8 +45,8 @@ impl RadarChart {
         center_y: f32,
         angle_step: f32
     ) {
-        for level in 1..=self.grid_levels {
-            let level_radius = max_radius * (level as f32 / self.grid_levels as f32);
+        for level in 1..self.grid_levels {
+            let level_radius = max_radius * (level as f32 / (self.grid_levels - 1) as f32);
 
             let start_angle = -FRAC_PI_2;
             let start_x = center_x + level_radius * start_angle.cos();
@@ -107,7 +107,7 @@ impl RadarChart {
         for i in 0..self.num_axes {
             let angle = (i as f32 * angle_step) - FRAC_PI_2;
             let stat_value = *self.stats.get(i).unwrap_or(&0) as f32;
-            let radius = max_radius * (stat_value / 7.0);
+            let radius = max_radius * (stat_value / (self.grid_levels - 1) as f32);
 
             let x = center_x + radius * angle.cos();
             let y = center_y + radius * angle.sin();
@@ -143,6 +143,68 @@ impl RadarChart {
         }
     }
 
+    fn build_labels(
+        &self,
+        window: &mut Window,
+        max_radius: f32,
+        center_x: f32,
+        center_y: f32,
+        angle_step: f32
+    ) {
+        for (i, label) in self.stat_labels.iter().enumerate() {
+            if i >= self.num_axes { break; }
+
+            let angle = (i as f32 * angle_step) - FRAC_PI_2;
+            
+            let text_radius = max_radius + 15.0;
+            let x = center_x + text_radius * angle.cos();
+            let y = center_y + text_radius * angle.sin();
+
+            let text_style = TextStyle {
+                font_size: px(12.0).into(),
+                color: hsla(0.0, 1.0, 0.99, 1.0),
+                ..Default::default()
+            };
+            let text_layout = window.text_system().layout_line(
+                label.as_str(),
+                text_style.font_size.to_pixels(px(1.0)),
+                &[],
+                None
+            );
+
+            let text_width: f32 = text_layout.width.into();
+            let text_height: f32 = text_style.font_size.to_pixels(window.rem_size()).into();
+
+            let mut draw_x = x;
+            let mut draw_y = y;
+
+            let cos_a = angle.cos();
+
+            if cos_a.abs() < 0.1 {
+                    draw_x -= text_width / 2.0;
+            } else if cos_a < 0.0 {
+                draw_x -= text_width;
+            }
+
+            draw_y += text_height / 4.0; 
+
+            let origin = point(px(draw_x), px(draw_y));
+            for run in &text_layout.runs {
+                for glyph in &run.glyphs {
+                    let glyph_origin = origin + glyph.position;
+
+                    let _ = window.paint_glyph(
+                        glyph_origin, 
+                        run.font_id, 
+                        glyph.id, 
+                        text_style.font_size.to_pixels(window.rem_size()), 
+                        text_style.color
+                    );
+                }
+            }
+        }
+    }
+
 }
 
 impl RenderOnce for RadarChart {
@@ -163,59 +225,7 @@ impl RenderOnce for RadarChart {
                         self.build_grid(window, max_radius, center_x, center_y, angle_step);
                         self.build_axes(window, max_radius, center_x, center_y, angle_step);
                         self.build_polygon(window, max_radius, center_x, center_y, angle_step);
-
-                        for (i, label) in self.stat_labels.iter().enumerate() {
-                            if i >= self.num_axes { break; }
-
-                            let angle = (i as f32 * angle_step) - FRAC_PI_2;
-                            
-                            let text_radius = max_radius + 15.0;
-                            let x = center_x + text_radius * angle.cos();
-                            let y = center_y + text_radius * angle.sin();
-
-                            let text_style = TextStyle {
-                                font_size: px(12.0).into(),
-                                color: hsla(0.0, 1.0, 0.99, 1.0),
-                                ..Default::default()
-                            };
-                            let text_layout = window.text_system().layout_line(
-                                label.as_str(),
-                                text_style.font_size.to_pixels(px(1.0)),
-                                &[],
-                                None
-                            );
-
-                            let text_width: f32 = text_layout.width.into();
-                            let text_height: f32 = text_style.font_size.to_pixels(window.rem_size()).into();
-
-                            let mut draw_x = x;
-                            let mut draw_y = y;
-
-                            let cos_a = angle.cos();
-
-                            if cos_a.abs() < 0.1 {
-                                    draw_x -= text_width / 2.0;
-                            } else if cos_a < 0.0 {
-                                draw_x -= text_width;
-                            }
-
-                            draw_y += text_height / 4.0; 
-
-                            let origin = point(px(draw_x), px(draw_y));
-                            for run in &text_layout.runs {
-                                for glyph in &run.glyphs {
-                                    let glyph_origin = origin + glyph.position;
-
-                                    let _ = window.paint_glyph(
-                                        glyph_origin, 
-                                        run.font_id, 
-                                        glyph.id, 
-                                        text_style.font_size.to_pixels(window.rem_size()), 
-                                        text_style.color
-                                    );
-                                }
-                            }
-                        }
+                        self.build_labels(window, max_radius, center_x, center_y, angle_step);
                     }
                 )
                 .size_full()
