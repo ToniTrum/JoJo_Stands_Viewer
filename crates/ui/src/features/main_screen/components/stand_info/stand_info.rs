@@ -56,12 +56,12 @@ impl RenderOnce for StandInfo {
                         stand.development_potential().to_u8() as u32
                     ],
                     vec![
-                        SharedString::from("Power"),
-                        SharedString::from("Speed"), 
-                        SharedString::from("Range"), 
-                        SharedString::from("Power Persistence"), 
-                        SharedString::from("Precision"), 
-                        SharedString::from("Development Potential")
+                        String::from("Power"),
+                        String::from("Speed"), 
+                        String::from("Range"), 
+                        String::from("Power Persistence"), 
+                        String::from("Precision"), 
+                        String::from("Development Potential")
                     ],
                     0x3c3c3c,
                     0xff830f,

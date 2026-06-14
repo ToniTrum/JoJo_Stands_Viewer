@@ -6,7 +6,7 @@ pub struct RadarChart {
     grid_levels: usize,
     num_axes: usize,
     stats: Vec<u32>,
-    stat_labels: Vec<SharedString>,
+    stat_labels: Vec<String>,
     grid_color: u32,
     polygon_color: u32,
     polygon_opacity: u8
@@ -17,7 +17,7 @@ impl RadarChart {
         grid_levels: usize, 
         num_axes: usize, 
         stats: Vec<u32>, 
-        stat_labels: Vec<SharedString>,
+        stat_labels: Vec<String>,
         grid_color: u32,
         polygon_color: u32,
         polygon_opacity: u8
@@ -31,6 +31,10 @@ impl RadarChart {
             polygon_color,
             polygon_opacity
         }
+    }
+
+    fn rgb_to_rgba(&self, color: u32, opacity: u8) -> Rgba {
+        rgba((color << 8) | (opacity as u32))
     }
 
     fn build_grid(
@@ -122,7 +126,7 @@ impl RadarChart {
         if let Ok(fill_path) = builder.build() {
             window.paint_path(
                 fill_path,
-                rgba((self.polygon_color << 8) | (self.polygon_opacity as u32))
+                self.rgb_to_rgba(self.polygon_color, self.polygon_opacity)
             );
         }
 
@@ -159,28 +163,62 @@ impl RenderOnce for RadarChart {
                         self.build_grid(window, max_radius, center_x, center_y, angle_step);
                         self.build_axes(window, max_radius, center_x, center_y, angle_step);
                         self.build_polygon(window, max_radius, center_x, center_y, angle_step);
+
+                        for (i, label) in self.stat_labels.iter().enumerate() {
+                            if i >= self.num_axes { break; }
+
+                            let angle = (i as f32 * angle_step) - FRAC_PI_2;
+                            
+                            let text_radius = max_radius + 15.0;
+                            let x = center_x + text_radius * angle.cos();
+                            let y = center_y + text_radius * angle.sin();
+
+                            let text_style = TextStyle {
+                                font_size: px(12.0).into(),
+                                color: hsla(0.0, 1.0, 0.99, 1.0),
+                                ..Default::default()
+                            };
+                            let text_layout = window.text_system().layout_line(
+                                label.as_str(),
+                                text_style.font_size.to_pixels(px(1.0)),
+                                &[],
+                                None
+                            );
+
+                            let text_width: f32 = text_layout.width.into();
+                            let text_height: f32 = text_style.font_size.to_pixels(window.rem_size()).into();
+
+                            let mut draw_x = x;
+                            let mut draw_y = y;
+
+                            let cos_a = angle.cos();
+
+                            if cos_a.abs() < 0.1 {
+                                    draw_x -= text_width / 2.0;
+                            } else if cos_a < 0.0 {
+                                draw_x -= text_width;
+                            }
+
+                            draw_y += text_height / 4.0; 
+
+                            let origin = point(px(draw_x), px(draw_y));
+                            for run in &text_layout.runs {
+                                for glyph in &run.glyphs {
+                                    let glyph_origin = origin + glyph.position;
+
+                                    let _ = window.paint_glyph(
+                                        glyph_origin, 
+                                        run.font_id, 
+                                        glyph.id, 
+                                        text_style.font_size.to_pixels(window.rem_size()), 
+                                        text_style.color
+                                    );
+                                }
+                            }
+                        }
                     }
                 )
                 .size_full()
             )
-            // .children(
-            //     self.stat_labels.iter().enumerate().map(|(i, label)| {
-            //         let angle_step = (2.0 * PI) / self.num_axes as f32;
-            //         let angle = (i as f32 * angle_step) - FRAC_PI_2;
-
-            //         let cos_a = angle.cos();
-            //         let sin_a = angle.sin();
-
-            //         let offset_x = cos_a * 15.0;
-            //         let offset_y = sin_a * 15.0;
-
-            //         let mut label_div = div()
-            //             .absolute()
-            //             .left(Length::to_pixels(&self, base_size, rem_size))
-            //             .top(RelativeDist::Sub(Value::Percent(50.0), px(-sin_a * 15.0)))
-            //             .text_size(px(12.0))
-            //             .text_color(rgb(0x9ca3af));
-            //     })
-            // )
     }
 }
