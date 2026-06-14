@@ -1,4 +1,4 @@
-pub mod stand_info;
-pub mod components;
+mod stand_info;
+mod components;
 
 pub use stand_info::StandInfo;

@@ -2,6 +2,7 @@ use gpui::*;
 
 use core::models::{StandModel, RankModel};
 use super::components::RadarChart;
+use super::components::StandImage;
 
 #[derive(IntoElement)]
 pub struct StandInfo {

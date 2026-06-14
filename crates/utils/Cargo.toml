@@ -1,6 +1,0 @@
-[package]
-name = "utils"
-version = "0.2.2"
-edition = "2024"
-
-[dependencies]

@@ -2,12 +2,12 @@ use std::error::Error;
 use std::fs::File;
 use std::io::BufReader;
 
-use core::repositories::stand::StandRepository;
-use core::models::stand::StandModel;
+use core::repositories::StandRepository;
+use core::models::StandModel;
 use crate::dtos::StandDto;
 use crate::file::PathManager;
 use crate::mappers::StandMapper;
-use crate::mappers::mapper::Mapper;
+use crate::mappers::Mapper;
 
 pub struct CsvStandRepository {
     items: Vec<StandModel>,

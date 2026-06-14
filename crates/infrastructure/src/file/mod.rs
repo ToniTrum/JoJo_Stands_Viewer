@@ -1,3 +1,3 @@
-pub mod path_manager;
+mod path_manager;
 
 pub use path_manager::PathManager;

@@ -2,7 +2,7 @@ use std::sync::Arc;
 use std::path::Path;
 
 use core::repositories::StandRepository;
-use core::services::stand::StandService;
+use core::services::StandService;
 use infrastructure::file::PathManager;
 use infrastructure::repositories::CsvStandRepository;
 

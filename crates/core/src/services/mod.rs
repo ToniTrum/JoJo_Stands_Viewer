@@ -1,3 +1,3 @@
-pub mod stand;
+mod stand;
 
 pub use stand::StandService;

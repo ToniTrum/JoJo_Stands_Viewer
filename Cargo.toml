@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/app", "crates/core", "crates/di", "crates/infrastructure", "crates/ui", "crates/utils"]
+members = ["crates/app", "crates/core", "crates/di", "crates/infrastructure", "crates/ui"]
 default-members = ["crates/app"]
 resolver = "2"
 
@@ -10,7 +10,6 @@ core = { path = "crates/core" }
 di = { path = "crates/di" }
 infrastructure = { path = "crates/infrastructure" }
 ui = { path = "crates/ui" }
-utils = { path = "crates/utils" }
 
 gpui = "0.2.2"
 gpui-component = "0.5.1"
