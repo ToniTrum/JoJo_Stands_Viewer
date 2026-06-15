@@ -35,4 +35,8 @@ impl PathManager {
             self.assets_dir.join("images").join("unknown.png")
         }
     }
+
+    pub fn icon_path(&self, path: &str) -> PathBuf {
+        self.assets_dir.join("icons").join(path)
+    }
 }

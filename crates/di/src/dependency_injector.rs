@@ -9,7 +9,7 @@ use infrastructure::repositories::CsvStandRepository;
 
 pub struct DependencyInjector {
     path_manager: Arc<PathManager>,
-    stand_service: Arc<StandService>
+    stand_service: Arc<StandService>,
 }
 
 impl Global for DependencyInjector {}

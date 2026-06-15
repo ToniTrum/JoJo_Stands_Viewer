@@ -4,6 +4,7 @@ use gpui_component::v_flex;
 
 use core::models::StandModel;
 use crate::components::{Button, ButtonContentType};
+use crate::themes::Theme;
 
 #[derive(IntoElement)]
 pub struct Sidebar {
@@ -28,8 +29,9 @@ impl Sidebar {
 }
 
 impl RenderOnce for Sidebar {
-    fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
         let stands = self.stands;
+        let theme = cx.global::<Theme>().clone();
 
         div()
             .w(px(250.0))
@@ -60,15 +62,15 @@ impl RenderOnce for Sidebar {
                                     ("stand_button", i), 
                                     ButtonContentType::Text(stand_name.into())
                                 )
-                                .style_modifier(|style| {
+                                .style_modifier(move |style| {
                                     style
                                         .w_full()
                                         .h(px(40.0))
                                         .mb_2()
                                         .justify_start()
                                         .p_2()
-                                        .bg(rgb(0x2d2d2d))
-                                        .hover(|s| s.bg(rgb(0x37373d)))
+                                        .bg(rgb(theme.button_color))
+                                        .hover(|s| s.bg(rgb(theme.button_hover_color)))
                                 })
                                 .on_click(move |_, window, cx| {
                                     callback_clone(current_name.clone(), window, cx)

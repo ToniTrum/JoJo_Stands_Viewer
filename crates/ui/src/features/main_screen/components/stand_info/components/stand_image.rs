@@ -27,4 +27,3 @@ impl RenderOnce for StandImage {
             .object_fit(ObjectFit::Contain)
     }
 }
-

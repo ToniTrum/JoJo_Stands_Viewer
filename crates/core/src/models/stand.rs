@@ -1,25 +1,25 @@
-use super::RankModel;
+use crate::types::Rank;
 
 #[derive(Debug, Clone)]
 pub struct StandModel {
     name: String,
-    power: RankModel,
-    speed: RankModel,
-    range: RankModel,
-    power_persistence: RankModel,
-    precision: RankModel,
-    development_potential: RankModel
+    power: Rank,
+    speed: Rank,
+    range: Rank,
+    power_persistence: Rank,
+    precision: Rank,
+    development_potential: Rank
 }
 
 impl StandModel {
     pub fn new(
         name: String,
-        power: RankModel,
-        speed: RankModel,
-        range: RankModel,
-        power_persistence: RankModel,
-        precision: RankModel,
-        development_potential: RankModel
+        power: Rank,
+        speed: Rank,
+        range: Rank,
+        power_persistence: Rank,
+        precision: Rank,
+        development_potential: Rank
     ) -> Self {
         StandModel {
             name,
@@ -36,27 +36,27 @@ impl StandModel {
         &self.name
     }
 
-    pub fn power(&self) -> RankModel {
+    pub fn power(&self) -> Rank {
         self.power
     }
 
-    pub fn speed(&self) -> RankModel {
+    pub fn speed(&self) -> Rank {
         self.speed
     }
 
-    pub fn range(&self) -> RankModel {
+    pub fn range(&self) -> Rank {
         self.range
     }
 
-    pub fn power_persistence(&self) -> RankModel {
+    pub fn power_persistence(&self) -> Rank {
         self.power_persistence
     }
 
-    pub fn precision(&self) -> RankModel {
+    pub fn precision(&self) -> Rank {
         self.precision
     }
 
-    pub fn development_potential(&self) -> RankModel {
+    pub fn development_potential(&self) -> Rank {
         self.development_potential
     }
 }
@@ -65,12 +65,12 @@ impl Default for StandModel {
     fn default() -> Self {
         StandModel {
             name: String::from("No selected"),
-            power: RankModel::None,
-            speed: RankModel::None,
-            range: RankModel::None,
-            power_persistence: RankModel::None,
-            precision: RankModel::None,
-            development_potential: RankModel::None
+            power: Rank::None,
+            speed: Rank::None,
+            range: Rank::None,
+            power_persistence: Rank::None,
+            precision: Rank::None,
+            development_potential: Rank::None
         }
     }
 }

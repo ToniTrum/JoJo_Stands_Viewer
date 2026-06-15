@@ -1,31 +1,31 @@
-use core::models::RankModel;
+use core::types::Rank;
 use crate::dtos::RankDto;
 use super::mapper::Mapper;
 
 pub struct RankMapper;
 
-impl Mapper<RankModel, RankDto> for RankMapper {
-    fn to_dto(model: &RankModel) -> RankDto {
+impl Mapper<Rank, RankDto> for RankMapper {
+    fn to_dto(model: &Rank) -> RankDto {
         match model {
-            RankModel::None => RankDto::None,
-            RankModel::E => RankDto::E,
-            RankModel::D => RankDto::D,
-            RankModel::C => RankDto::C,
-            RankModel::B => RankDto::B,
-            RankModel::A => RankDto::A,
-            RankModel::Infinite => RankDto::Infi
+            Rank::None => RankDto::None,
+            Rank::E => RankDto::E,
+            Rank::D => RankDto::D,
+            Rank::C => RankDto::C,
+            Rank::B => RankDto::B,
+            Rank::A => RankDto::A,
+            Rank::Infinite => RankDto::Infi
         }
     }
 
-    fn to_model(dto: &RankDto) -> RankModel {
+    fn to_model(dto: &RankDto) -> Rank {
         match dto {
-            RankDto::None => RankModel::None,
-            RankDto::E => RankModel::E,
-            RankDto::D => RankModel::D,
-            RankDto::C => RankModel::C,
-            RankDto::B => RankModel::B,
-            RankDto::A => RankModel::A,
-            RankDto::Infi => RankModel::Infinite
+            RankDto::None => Rank::None,
+            RankDto::E => Rank::E,
+            RankDto::D => Rank::D,
+            RankDto::C => Rank::C,
+            RankDto::B => Rank::B,
+            RankDto::A => Rank::A,
+            RankDto::Infi => Rank::Infinite
         }
     }
 }

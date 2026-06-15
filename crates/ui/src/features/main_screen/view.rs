@@ -3,6 +3,7 @@ use gpui::*;
 use super::MainScreenEntity;
 use super::components::Sidebar;
 use super::components::StandInfo;
+use crate::themes::Theme;
 
 pub struct MainScreen {
     entity: Entity<MainScreenEntity>,
@@ -26,11 +27,13 @@ impl Render for MainScreen {
         let entity_clone = self.entity.clone();
         let selected_stand = entity_state.selected_stand();
 
+        let theme = cx.global::<Theme>();
+
         div()
             .size_full()
             .flex()
-            .bg(rgb(0x1e1e1e))
-            .text_color(rgb(0xffffff))
+            .bg(rgb(theme.background_color))
+            .text_color(rgb(theme.text_color))
             .child(
                 Sidebar::new(stands.to_vec(), move |stand_name, _window, cx| {
                     entity_clone.update(cx, |entity, _cx| {

@@ -1,8 +1,11 @@
-use gpui::{prelude::FluentBuilder, *};
+use gpui::{*, prelude::FluentBuilder};
+
+use di::DependencyInjector;
+use crate::themes::Theme;
 
 pub enum ButtonContentType {
     Text(SharedString),
-    Icon(SharedString),
+    Icon(String),
 }
 
 #[derive(IntoElement)]
@@ -35,7 +38,10 @@ impl Button {
 }
 
 impl RenderOnce for Button {
-    fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
+    fn render(self, _window: &mut Window, cx: &mut App) -> impl IntoElement {
+        let path_manager = cx.global::<DependencyInjector>().path_manager();
+        let theme = cx.global::<Theme>();
+
         div()
             .id(self.id)
             .flex()
@@ -51,8 +57,19 @@ impl RenderOnce for Button {
                 this.on_click(move |evt, window, cx| (on_click)(evt, window, cx))
             })
             .child(match self.content_type {
-                ButtonContentType::Text(text) => div().child(text),
-                ButtonContentType::Icon(icon) => div().child(icon),
+                ButtonContentType::Text(text) => div().child(text).into_any_element(),
+                ButtonContentType::Icon(icon) => {
+                    let path = path_manager
+                        .icon_path(&icon)
+                        .to_string_lossy()
+                        .into_owned();
+
+                    svg()
+                        .size(px(30.0))
+                        .path(path)
+                        .text_color(rgb(theme.text_color))
+                        .into_any_element()
+                },
             })
     }
 }

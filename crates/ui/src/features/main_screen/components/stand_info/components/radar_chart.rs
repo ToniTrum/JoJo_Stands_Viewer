@@ -10,7 +10,8 @@ pub struct RadarChart {
     stat_labels: Vec<String>,
     grid_color: u32,
     polygon_color: u32,
-    polygon_opacity: u8
+    polygon_opacity: u8,
+    text_color: Hsla
 }
 
 impl RadarChart {
@@ -22,7 +23,8 @@ impl RadarChart {
         stat_labels: Vec<String>,
         grid_color: u32,
         polygon_color: u32,
-        polygon_opacity: u8
+        polygon_opacity: u8,
+        text_color: Hsla
     ) -> Self {
         Self {
             grid_levels,
@@ -32,7 +34,8 @@ impl RadarChart {
             stat_labels,
             grid_color,
             polygon_color,
-            polygon_opacity
+            polygon_opacity,
+            text_color
         }
     }
 
@@ -163,7 +166,7 @@ impl RadarChart {
 
             let text_style = TextStyle {
                 font_size: px(12.0).into(),
-                color: hsla(0.0, 1.0, 0.99, 1.0),
+                color: self.text_color,
                 ..Default::default()
             };
             let text_layout = window.text_system().layout_line(
@@ -239,7 +242,7 @@ impl RadarChart {
         for (i, value) in self.grid_values.iter().enumerate() {
             let text_style = TextStyle {
                 font_size: px(12.0).into(),
-                color: hsla(0.0, 1.0, 0.99, 1.0),
+                color: self.text_color,
                 ..Default::default()
             };
             let text_layout = window.text_system().layout_line(

@@ -1,9 +1,14 @@
 use gpui::*;
+use gpui_component::h_flex;
 use gpui_component::{v_flex, scroll::ScrollableElement};
 
-use core::models::{StandModel, RankModel};
+use core::models::StandModel;
+use core::types::Rank;
 use super::components::RadarChart;
 use super::components::StandImage;
+use crate::Button;
+use crate::components::ButtonContentType;
+use crate::themes::Theme;
 
 #[derive(IntoElement)]
 pub struct StandInfo {
@@ -17,20 +22,20 @@ impl StandInfo {
 }
 
 impl RenderOnce for StandInfo {
-
-    fn render(self, window: &mut Window, _cx: &mut App) -> impl IntoElement {
+    fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let stand = self.stand.clone().unwrap_or_default();
+        let theme = cx.global::<Theme>().clone();
 
         let mut stand_image = div().child(StandImage::new(stand.name().to_string()));
         let mut radar_chart = div().child(RadarChart::new(
             7,
             6,
             vec![
-                RankModel::E.to_string(),
-                RankModel::D.to_string(),
-                RankModel::C.to_string(),
-                RankModel::B.to_string(),
-                RankModel::A.to_string(),
+                Rank::E.to_string(),
+                Rank::D.to_string(),
+                Rank::C.to_string(),
+                Rank::B.to_string(),
+                Rank::A.to_string(),
             ],
             vec![
                 stand.power().to_u8() as u32,
@@ -48,9 +53,10 @@ impl RenderOnce for StandInfo {
                 String::from("Precision"), 
                 String::from("Development Potential")
             ],
-            0x9d9d9d,
-            0xff830f,
-            120
+            theme.grid_color,
+            theme.polygon_color,
+            theme.polygon_opacity,
+            theme.radar_text_color
         ));
 
         let window_width = window.bounds().size.width.to_f64() as f32;
@@ -108,16 +114,35 @@ impl RenderOnce for StandInfo {
         div()
             .flex_1()
             .h_full()
-            .bg(rgb(0x1e1e1e))
             .p_6()
             .flex()
             .flex_col()
             .child(
-                div()
+                h_flex()
+                    .flex()
+                    .flex_row()
+                    .items_center()
+                    .justify_between()
                     .text_size(px(32.0))
                     .font_weight(FontWeight::BOLD)
                     .mb(px(20.0))
+                    .w_full()
                     .child(stand.name().to_string())
+                    .child(
+                        Button::new(
+                            "theme_button", 
+                            ButtonContentType::Icon(String::from("theme.svg"))
+                        )
+                        .style_modifier(move |style| {
+                            style
+                                .p_2()
+                                .bg(rgb(theme.button_color))
+                                .hover(|s| s.bg(rgb(theme.button_hover_color)))
+                        })
+                        .on_click(move |_, _window, cx| {
+                            theme.toggle_theme(cx);
+                        })
+                    )
             )
             .child(
                 content_container
