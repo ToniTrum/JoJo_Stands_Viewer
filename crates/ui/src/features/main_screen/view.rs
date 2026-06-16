@@ -3,7 +3,7 @@ use gpui::*;
 use super::MainScreenEntity;
 use super::components::Sidebar;
 use super::components::StandInfo;
-use crate::themes::Theme;
+use crate::Theme;
 
 pub struct MainScreen {
     entity: Entity<MainScreenEntity>,

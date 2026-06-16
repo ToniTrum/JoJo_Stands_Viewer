@@ -1,7 +1,7 @@
 use gpui::{*, prelude::FluentBuilder};
 
 use di::DependencyInjector;
-use crate::themes::Theme;
+use crate::Theme;
 
 pub enum ButtonContentType {
     Text(SharedString),

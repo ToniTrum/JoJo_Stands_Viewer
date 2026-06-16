@@ -5,7 +5,8 @@ use anyhow::Result;
 use di::DependencyInjector;
 use ui::MainScreenEntity;
 use ui::MainScreen;
-use ui::themes::Theme;
+use ui::Theme;
+use ui::LocaleManager;
 
 struct Assets;
 
@@ -32,6 +33,7 @@ fn main() {
         cx.set_global(gpui_component::Theme::default());
         cx.set_global(di);
         cx.set_global(Theme::default());
+        cx.set_global(LocaleManager::new());
 
         let window_entity = cx.new(|_cx| {
             MainScreenEntity::new(stand_service)

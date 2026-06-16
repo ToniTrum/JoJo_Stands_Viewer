@@ -8,7 +8,8 @@ use super::components::RadarChart;
 use super::components::StandImage;
 use crate::Button;
 use crate::components::ButtonContentType;
-use crate::themes::Theme;
+use crate::Theme;
+use crate::locale::{tr, LocaleManager};
 
 #[derive(IntoElement)]
 pub struct StandInfo {
@@ -25,6 +26,7 @@ impl RenderOnce for StandInfo {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let stand = self.stand.clone().unwrap_or_default();
         let theme = cx.global::<Theme>().clone();
+        let locale_manager = cx.global::<LocaleManager>().clone();
 
         let mut stand_image = div().child(StandImage::new(stand.name().to_string()));
         let mut radar_chart = div().child(RadarChart::new(
@@ -46,12 +48,12 @@ impl RenderOnce for StandInfo {
                 stand.development_potential().to_u8() as u32
             ],
             vec![
-                String::from("Power"),
-                String::from("Speed"),
-                String::from("Range"), 
-                String::from("Power Persistence"), 
-                String::from("Precision"), 
-                String::from("Development Potential")
+                tr(cx, "power").to_string(),
+                tr(cx, "speed").to_string(),
+                tr(cx, "range").to_string(),
+                tr(cx, "power_persistence").to_string(), 
+                tr(cx, "precision").to_string(),
+                tr(cx, "development_potential").to_string()
             ],
             theme.grid_color,
             theme.polygon_color,
@@ -129,19 +131,40 @@ impl RenderOnce for StandInfo {
                     .w_full()
                     .child(stand.name().to_string())
                     .child(
-                        Button::new(
-                            "theme_button", 
-                            ButtonContentType::Icon(String::from("theme.svg"))
-                        )
-                        .style_modifier(move |style| {
-                            style
-                                .p_2()
-                                .bg(rgb(theme.button_color))
-                                .hover(|s| s.bg(rgb(theme.button_hover_color)))
-                        })
-                        .on_click(move |_, _window, cx| {
-                            theme.toggle_theme(cx);
-                        })
+                        div()
+                            .flex()
+                            .flex_row()
+                            .gap_2()
+                            .child(
+                                Button::new(
+                                    "language_button", 
+                                    ButtonContentType::Icon(String::from("language.svg"))
+                                )
+                                .style_modifier(move |style| {
+                                    style
+                                        .p_2()
+                                        .bg(rgb(theme.button_color))
+                                        .hover(|s| s.bg(rgb(theme.button_hover_color)))
+                                })
+                                .on_click(move |_, _window, cx| {
+                                    locale_manager.toggle_language(cx);
+                                })
+                            )
+                            .child(
+                                Button::new(
+                                    "theme_button", 
+                                    ButtonContentType::Icon(String::from("theme.svg"))
+                                )
+                                .style_modifier(move |style| {
+                                    style
+                                        .p_2()
+                                        .bg(rgb(theme.button_color))
+                                        .hover(|s| s.bg(rgb(theme.button_hover_color)))
+                                })
+                                .on_click(move |_, _window, cx| {
+                                    theme.toggle_theme(cx);
+                                })
+                            )
                     )
             )
             .child(

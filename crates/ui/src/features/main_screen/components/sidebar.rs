@@ -4,7 +4,7 @@ use gpui_component::v_flex;
 
 use core::models::StandModel;
 use crate::components::{Button, ButtonContentType};
-use crate::themes::Theme;
+use crate::{Theme, locale::tr};
 
 #[derive(IntoElement)]
 pub struct Sidebar {
@@ -41,7 +41,7 @@ impl RenderOnce for Sidebar {
             .p_2()
             .gap_2()
             .justify_between()
-            .child("Stand list")
+            .child(tr(cx, "stand_list"))
             .child(
                 div()
                     .flex_1()
