@@ -1,11 +1,13 @@
 use gpui::{App, Global, Hsla, hsla};
 
+/// Represents the active visual mode of the application's user interface.
 #[derive(Clone)]
 enum ThemeMode {
     Light,
     Dark
 }
 
+/// A comprehensive styling configuration containing color palettes and opacity settings for the UI.
 #[derive(Clone)]
 pub struct Theme {
     mode: ThemeMode,
@@ -25,6 +27,11 @@ pub struct Theme {
 impl Global for Theme {}
 
 impl Theme {
+    /// Constructs a predefined dark theme configuration matching low-light environment palettes.
+    ///
+    /// # Returns
+    ///
+    /// * A `Theme` instance initialized with dark background colors and high-contrast text markers.
     pub fn dark() -> Self {
         Self {
             mode: ThemeMode::Dark,
@@ -42,6 +49,11 @@ impl Theme {
         }
     }
 
+    /// Constructs a predefined light theme configuration matching high-luminance environment palettes.
+    ///
+    /// # Returns
+    ///
+    /// * A `Theme` instance initialized with light background colors and readable dark accents.
     pub fn light() -> Self {
         Self {
             mode: ThemeMode::Light,
@@ -59,6 +71,11 @@ impl Theme {
         }
     }
 
+    /// Toggles the global application theme between Light and Dark modes.
+    ///
+    /// # Arguments
+    ///
+    /// * `cx` - A mutable reference to the GPUI `App` context.
     pub fn toggle_theme(&self, cx: &mut App) {
         let current = cx.global::<Self>().clone();
 

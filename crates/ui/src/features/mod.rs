@@ -1,3 +1,3 @@
 mod main_screen;
 
-pub use main_screen::{MainScreenEntity, MainScreen};
+pub use main_screen::{MainScreenState, MainScreen};

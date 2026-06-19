@@ -1,6 +1,11 @@
-use gpui::*;
+use gpui::{
+    IntoElement, RenderOnce, Window, App,
+    PathBuilder, Hsla, Rgba, TextStyle, Styled, ParentElement,
+    div, rgb, rgba, point, px, canvas
+};
 use std::f32::consts::{FRAC_PI_2, PI};
 
+/// A custom canvas element that low-level draws a responsive multi-axis radar chart.
 #[derive(IntoElement)]
 pub struct RadarChart {
     grid_levels: usize,
@@ -15,6 +20,23 @@ pub struct RadarChart {
 }
 
 impl RadarChart {
+    /// Constructs a new `RadarChart` component with the specified visual and data properties.
+    ///
+    /// # Arguments
+    ///
+    /// * `grid_levels` - The number of concentric background polygon rings.
+    /// * `num_axes` - The number of statistical dimensions (axes) to generate.
+    /// * `grid_values` - Text representations of scale values displayed along the vertical reference axis.
+    /// * `stats` - Numeric values representing the actual data points for each axis.
+    /// * `stat_labels` - Titles for each axis displayed at the outer edges.
+    /// * `grid_color` - Hexadecimal RGB literal for the background grid lines.
+    /// * `polygon_color` - Hexadecimal RGB literal for the data area stroke and fill.
+    /// * `polygon_opacity` - Alpha channel byte (0-255) for the filled data area.
+    /// * `text_color` - The color schema for rendering titles and axis values.
+    ///
+    /// # Returns
+    ///
+    /// * An initialized `RadarChart` instance.
     pub fn new(
         grid_levels: usize, 
         num_axes: usize,
@@ -39,10 +61,29 @@ impl RadarChart {
         }
     }
 
+    /// Converts a RGB hexadecimal color combined with an 8-bit alpha byte into a GPUI `Rgba` value.
+    ///
+    /// # Arguments
+    ///
+    /// * `color` - A `u32` literal holding the RGB value.
+    /// * `opacity` - An alpha byte channel where `0` is fully transparent and `255` is opaque.
+    ///
+    /// # Returns
+    ///
+    /// * A resolved `Rgba` structure ready for canvas rendering pipelines.
     fn rgb_to_rgba(&self, color: u32, opacity: u8) -> Rgba {
         rgba((color << 8) | (opacity as u32))
     }
 
+    /// Renders the concentric background grid lines forming the regular web structure.
+    ///
+    /// # Arguments
+    ///
+    /// * `window` - A mutable reference to the target viewport rendering window.
+    /// * `max_radius` - The maximum outer radius boundary for the chart.
+    /// * `center_x` - The horizontal origin pixel coordinate of the chart center.
+    /// * `center_y` - The vertical origin pixel coordinate of the chart center.
+    /// * `angle_step` - The internal radial angle step size between adjacent axes in radians.
     fn build_grid(
         &self, 
         window: &mut Window,
@@ -75,6 +116,15 @@ impl RadarChart {
         }
     }
 
+    /// Paints the straight linear axes shooting outwards from the origin center point.
+    ///
+    /// # Arguments
+    ///
+    /// * `window` - A mutable reference to the target viewport rendering window.
+    /// * `max_radius` - The absolute maximum coordinate distance for the structural axis limits.
+    /// * `center_x` - The horizontal origin pixel coordinate of the chart center.
+    /// * `center_y` - The vertical origin pixel coordinate of the chart center.
+    /// * `angle_step` - The calculated angular interval factor between sequential axes.
     fn build_axes(
         &self, 
         window: &mut Window,
@@ -100,6 +150,15 @@ impl RadarChart {
         }
     }
 
+    /// Constructs and overlays the filled and stroked data polygon matching the current stats values.
+    ///
+    /// # Arguments
+    ///
+    /// * `window` - A mutable reference to the target viewport rendering window.
+    /// * `max_radius` - The maximum outer radius boundary for scale normalizations.
+    /// * `center_x` - The horizontal origin pixel coordinate of the chart center.
+    /// * `center_y` - The vertical origin pixel coordinate of the chart center.
+    /// * `angle_step` - The standard radial angular step slice size.
     fn build_polygon(
         &self, 
         window: &mut Window,
@@ -148,6 +207,15 @@ impl RadarChart {
         }
     }
 
+    /// Layouts and draws the category descriptive labels around the chart's peripheral endpoints.
+    ///
+    /// # Arguments
+    ///
+    /// * `window` - A mutable reference to the target viewport rendering window.
+    /// * `max_radius` - The outer framework radius size boundary.
+    /// * `center_x` - The horizontal origin pixel coordinate of the chart center.
+    /// * `center_y` - The vertical origin pixel coordinate of the chart center.
+    /// * `angle_step` - The step angle divider used to position text blocks.
     fn build_labels(
         &self,
         window: &mut Window,
@@ -208,6 +276,14 @@ impl RadarChart {
         }
     }
 
+    /// Renders small value tick indicator marks across the reference vertical axis.
+    ///
+    /// # Arguments
+    ///
+    /// * `window` - A mutable reference to the target viewport rendering window.
+    /// * `max_radius` - The baseline terminal grid radius size boundary.
+    /// * `center_x` - The horizontal origin pixel coordinate of the chart center.
+    /// * `center_y` - The vertical origin pixel coordinate of the chart center.
     fn build_values_points(
         &self, 
         window: &mut Window,
@@ -232,6 +308,14 @@ impl RadarChart {
         }
     }
 
+    /// Draws labels adjacent to tick marks on the reference scale axis.
+    ///
+    /// # Arguments
+    ///
+    /// * `window` - A mutable reference to the target viewport rendering window.
+    /// * `max_radius` - The baseline terminal grid radius size boundary.
+    /// * `center_x` - The horizontal origin pixel coordinate of the chart center.
+    /// * `center_y` - The vertical origin pixel coordinate of the chart center.
     fn build_values_labels(
         &self, 
         window: &mut Window,
@@ -279,16 +363,14 @@ impl RadarChart {
 impl RenderOnce for RadarChart {
     fn render(self, _window: &mut Window, _cx: &mut App) -> impl IntoElement {
         div()
-            .relative()
             .size_full()
             .child(
                 canvas(
                     |_, _, _| {},
-                    move |bounds, _, window, _cx,| {
+                    move |bounds, _, window, _,| {
                         let center_x = f32::from(bounds.origin.x) + f32::from(bounds.size.width) / 2.0;
                         let center_y = f32::from(bounds.origin.y) + f32::from(bounds.size.height) / 2.0;
                         let max_radius = f32::from(bounds.size.width.min(bounds.size.height)) / 2.0 - 40.0;
-
                         let angle_step = (2.0 * PI) / self.num_axes as f32;
 
                         self.build_grid(window, max_radius, center_x, center_y, angle_step);

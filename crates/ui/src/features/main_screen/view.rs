@@ -1,17 +1,32 @@
-use gpui::*;
+use gpui::{
+    Entity, Subscription, Render, Window, Context,
+    IntoElement, Styled, ParentElement,
+    div, rgb
+};
 
-use super::MainScreenEntity;
+use super::MainScreenState;
 use super::components::Sidebar;
 use super::components::StandInfo;
 use crate::Theme;
 
+/// The UI view container component representing the main screen.
 pub struct MainScreen {
-    entity: Entity<MainScreenEntity>,
+    entity: Entity<MainScreenState>,
     _subscription: Subscription
 }
 
 impl MainScreen {
-    pub fn new(entity: Entity<MainScreenEntity>, cx: &mut Context<Self>) -> Self {
+    /// Constructs a new `MainScreen` instance and binds a change observation listener.
+    ///
+    /// # Arguments
+    ///
+    /// * `entity` - An encapsulated GPUI `Entity` holding the reactive model state data logic.
+    /// * `cx` - A mutable reference to the view's current operational execution context.
+    ///
+    /// # Returns
+    ///
+    /// * An initialized view layout node subscribing to state events.
+    pub fn new(entity: Entity<MainScreenState>, cx: &mut Context<Self>) -> Self {
         let _subscription = cx.observe(&entity, |_, _, cx| cx.notify());
         MainScreen {
             entity,
@@ -22,10 +37,10 @@ impl MainScreen {
 
 impl Render for MainScreen {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let entity_state = self.entity.read(cx);
-        let stands = entity_state.stands();
-        let entity_clone = self.entity.clone();
-        let selected_stand = entity_state.selected_stand();
+        let state = self.entity.read(cx);
+        let stands = state.stands();
+        let state_clone = self.entity.clone();
+        let selected_stand = state.selected_stand();
 
         let theme = cx.global::<Theme>();
 
@@ -36,10 +51,11 @@ impl Render for MainScreen {
             .text_color(rgb(theme.text_color))
             .child(
                 Sidebar::new(stands.to_vec(), move |stand_name, _window, cx| {
-                    entity_clone.update(cx, |entity, _cx| {
-                        entity.select_stand(stand_name); 
-                });
-            }))
+                    state_clone.update(cx, |state, _cx| {
+                        state.select_stand(stand_name); 
+                    });
+                })
+            )
             .child(
                 StandInfo::new(selected_stand)
             )

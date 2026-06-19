@@ -1,11 +1,16 @@
 use std::sync::Arc;
-use gpui::*;
+use gpui::{
+    IntoElement, Window, App, RenderOnce, Styled,
+    ParentElement, InteractiveElement, StatefulInteractiveElement,
+    div, px, rgb,
+};
 use gpui_component::v_flex;
 
 use core::models::StandModel;
-use crate::components::{Button, ButtonContentType};
+use crate::shared::{button, ButtonContentType};
 use crate::{Theme, locale::tr};
 
+/// A structural navigation viewport component representing the left sidebar panel.
 #[derive(IntoElement)]
 pub struct Sidebar {
     stands: Vec<StandModel>,
@@ -13,6 +18,16 @@ pub struct Sidebar {
 }
 
 impl Sidebar {
+    /// Constructs a new `Sidebar` panel.
+    ///
+    /// # Arguments
+    ///
+    /// * `stands` - A vector storage payload containing the pre-cached `StandModel` entities.
+    /// * `on_stand_selected` - A closure executed when an element row is clicked, forwarding the entity identifier key.
+    ///
+    /// # Returns
+    ///
+    /// * An initialized `Sidebar` layout node builder instance.
     pub fn new(
         stands: Vec<StandModel>, 
         on_stand_selected: impl Fn(String, &mut Window, &mut App) + 'static,
@@ -21,10 +36,6 @@ impl Sidebar {
             stands, 
             on_stand_selected: Arc::new(on_stand_selected) 
         }
-    }
-
-    pub fn _stands(&self) -> &Vec<StandModel> {
-        &self.stands
     }
 }
 
@@ -58,7 +69,7 @@ impl RenderOnce for Sidebar {
                                 let current_name = stand_name.clone();
                                 let callback_clone = self.on_stand_selected.clone();
 
-                                Button::new(
+                                button(
                                     ("stand_button", i), 
                                     ButtonContentType::Text(stand_name.into())
                                 )

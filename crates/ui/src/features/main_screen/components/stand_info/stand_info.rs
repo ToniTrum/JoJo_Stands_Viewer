@@ -1,22 +1,29 @@
-use gpui::*;
-use gpui_component::h_flex;
-use gpui_component::{v_flex, scroll::ScrollableElement};
+use gpui::{
+    IntoElement, RenderOnce, Window, App, ParentElement, 
+    Styled, InteractiveElement, FontWeight,
+    div, px, rgb
+};
+use gpui_component::{v_flex, h_flex, scroll::ScrollableElement};
 
 use core::models::StandModel;
 use core::types::Rank;
-use super::components::RadarChart;
-use super::components::StandImage;
-use crate::Button;
-use crate::components::ButtonContentType;
+use super::components::{StandImage, RadarChart};
+use crate::shared::{button, ButtonContentType};
 use crate::Theme;
-use crate::locale::{tr, LocaleManager};
+use crate::locale::{tr, Locale};
 
+/// A presentation component that displays comprehensive details about a selected Stand model.
 #[derive(IntoElement)]
 pub struct StandInfo {
     stand: Option<StandModel>,
 }
 
 impl StandInfo {
+    /// Constructs a new `StandInfo` display panel wrapping an optional `StandModel` record.
+    ///
+    /// # Arguments
+    ///
+    /// * `stand` - The optional active entity context model to display inside the layout view.
     pub fn new(stand: Option<StandModel>) -> Self {
         Self { stand }
     }
@@ -26,7 +33,7 @@ impl RenderOnce for StandInfo {
     fn render(self, window: &mut Window, cx: &mut App) -> impl IntoElement {
         let stand = self.stand.clone().unwrap_or_default();
         let theme = cx.global::<Theme>().clone();
-        let locale_manager = cx.global::<LocaleManager>().clone();
+        let locale = cx.global::<Locale>().clone();
 
         let mut stand_image = div().child(StandImage::new(stand.name().to_string()));
         let mut radar_chart = div().child(RadarChart::new(
@@ -136,9 +143,9 @@ impl RenderOnce for StandInfo {
                             .flex_row()
                             .gap_2()
                             .child(
-                                Button::new(
+                                button(
                                     "language_button", 
-                                    ButtonContentType::Icon(String::from("language.svg"))
+                                    ButtonContentType::Icon(String::from("language.svg"), 30.0)
                                 )
                                 .style_modifier(move |style| {
                                     style
@@ -147,13 +154,13 @@ impl RenderOnce for StandInfo {
                                         .hover(|s| s.bg(rgb(theme.button_hover_color)))
                                 })
                                 .on_click(move |_, _window, cx| {
-                                    locale_manager.toggle_language(cx);
+                                    locale.toggle_language(cx);
                                 })
                             )
                             .child(
-                                Button::new(
+                                button(
                                     "theme_button", 
-                                    ButtonContentType::Icon(String::from("theme.svg"))
+                                    ButtonContentType::Icon(String::from("theme.svg"), 30.0)
                                 )
                                 .style_modifier(move |style| {
                                     style

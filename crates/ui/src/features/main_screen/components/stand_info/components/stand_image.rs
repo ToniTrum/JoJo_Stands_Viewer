@@ -1,13 +1,27 @@
-use gpui::*;
+use gpui::{
+    IntoElement, RenderOnce, Window, App, 
+    ObjectFit, Styled, StyledImage,
+    img
+};
 
 use di::DependencyInjector;
 
+/// A lightweight visual component responsible for dynamically loading and rendering a Stand's profile image.
 #[derive(IntoElement)]
 pub struct StandImage {
     stand_name: String
 }
 
 impl StandImage {
+    /// Constructs a new `StandImage` component instance for a specific Stand entity.
+    ///
+    /// # Arguments
+    ///
+    /// * `stand_name` - The unique string identifier name of the targeted Stand.
+    ///
+    /// # Returns
+    ///
+    /// * An initialized `StandImage` layout node builder.
     pub fn new(stand_name: String) -> Self {
         Self {
             stand_name

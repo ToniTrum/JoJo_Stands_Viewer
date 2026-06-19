@@ -1,6 +1,6 @@
-mod entity;
+mod state;
 mod view;
 mod components;
 
-pub use entity::MainScreenEntity;
+pub use state::MainScreenState;
 pub use view::MainScreen;

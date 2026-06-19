@@ -3,9 +3,19 @@ use crate::dtos::StandDto;
 use super::mapper::Mapper;
 use crate::mappers::RankMapper;
 
+/// A stateless mapping utility responsible for converting between complex domain `StandModel` structures and flattened infrastructure `StandDto` data layers.
 pub struct StandMapper;
 
 impl Mapper<StandModel, StandDto> for StandMapper {
+    /// Maps a domain `StandModel` reference into its infrastructure-specific serialized `StandDto` layout.
+    ///
+    /// # Arguments
+    ///
+    /// * `model` - A shared reference to the domain `StandModel`.
+    ///
+    /// # Returns
+    ///
+    /// * A fully initialized `StandDto` instance containing mapped attribute transfer tokens.
     fn to_dto(model: &StandModel) -> StandDto {
         StandDto::new(
             String::from(model.name()),
@@ -18,6 +28,15 @@ impl Mapper<StandModel, StandDto> for StandMapper {
         )
     }
 
+    /// Maps a raw infrastructure `StandDto` data transfer record back into a domain `StandModel`.
+    ///
+    /// # Arguments
+    ///
+    /// * `dto` - A shared reference to the deserialized external `StandDto` data block.
+    ///
+    /// # Returns
+    ///
+    /// * A core domain `StandModel` instance.
     fn to_model(dto: &StandDto) -> StandModel {
         StandModel::new(
             String::from(dto.stand()),

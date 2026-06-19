@@ -4,8 +4,7 @@ default-members = ["crates/app"]
 resolver = "2"
 
 [workspace.dependencies]
-example_app = { path = "crates/app" }
-
+app = { path = "crates/app" }
 core = { path = "crates/core" }
 di = { path = "crates/di" }
 infrastructure = { path = "crates/infrastructure" }
